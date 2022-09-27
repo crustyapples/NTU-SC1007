@@ -120,5 +120,11 @@ void deleteTree(BTNode **root){
 }
 
 void rotateRNode(BTNode **node){
-//Write Your Code Here
+    BTNode *cur = *node;
+    BTNode *left = cur->left;
+
+    cur->left = left->right;
+    left->right = cur;
+
+    *node = left;
 }
