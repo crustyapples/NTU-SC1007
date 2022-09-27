@@ -151,8 +151,22 @@ void deleteQueue(Queue *qPtr)
 
 void reverseStack(Stack *sPtr)
 {
-//Write your code here
+    Queue s2;
+    s2.size = 0;
+    // transfer stack to a queue
+    while (sPtr->size != 0) {
+        enqueue(&s2, peek(*sPtr));
+        pop(sPtr);
+    }
 
-
+    // dequeue it back to original stack
+    while (s2.size != 0) {
+        push(sPtr, getFront(s2));
+        dequeue(&s2);
+    }
 
 }
+
+// 5 4 3 2 1
+// 1 2 3 4 5
+// 

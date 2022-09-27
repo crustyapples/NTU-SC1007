@@ -90,10 +90,27 @@ int smallestValue(BTNode *node){
     int right = node->item;
     if (node == NULL) return 0;
 
-    if (node->left && (node->left->item < node->item)) left = smallestValue(node->left);
-    if (node->right && (node->right->item < node->item)) right = smallestValue(node->right);
+    if (node->left) left = smallestValue(node->left);
+    if (node->right) right = smallestValue(node->right);
 
     if (left<right) return left;
     if (right<left) return right;
     else return left;        
 }
+
+
+// int smallestValue(BTNode *node){
+//     int l,r;
+
+//     l=r=node->item;
+// 	if (node->left!=NULL)
+//         l=smallestValue(node->left);
+//     if (node->right!=NULL)
+//         r=smallestValue(node->right);
+
+// 	if (l<node->item && l<r)
+// 		return l;
+// 	else if (r<node->item && r<l)
+// 		return r;
+// 	else return node->item;
+// }

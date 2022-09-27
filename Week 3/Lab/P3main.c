@@ -108,5 +108,16 @@ void deleteList(ListNode **ptrHead){
 }
 
 int concatenate(ListNode **ptrHead1, ListNode *head2){
+    // find the last node of first list and assign next to head of next list
 
+    ListNode *cur = *ptrHead1;
+    while (cur->next != NULL) {
+        cur = cur->next;
+    }
+
+    cur->next = head2;
 }
+
+// 1 2 3 4
+// 1 2 3 4
+// output should be 1 2 3 4 1 2 3 4

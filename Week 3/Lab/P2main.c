@@ -107,5 +107,41 @@ void deleteList2(LinkedList *ll){
 }
 
 void moveEvenItemsToBack(LinkedList *ll){
+    ListNode *cur = ll->head;
+    ListNode *pre = NULL;
+    int evenCount = 0;
 
+    while (cur!=NULL) {
+        if (cur->item % 2 == 0) evenCount++;
+        cur = cur->next;
+    }
+
+    int i=0;
+    int counter=0;
+    cur = ll->head;
+
+    while (cur!=NULL) {
+        if (counter == evenCount || cur->next == NULL) {
+            break;
+        }
+        
+        if (cur->item % 2 == 0 && i==0) {
+            insertNode2(ll,ll->size,cur->item);
+            ll->head = ll->head->next;
+            ll->size--;
+            pre = ll->head;
+            cur = ll->head->next; i++; counter++;
+        }
+        
+        else if (cur->item % 2 == 0 && i!=0 && cur->next != NULL) {
+            insertNode2(ll,ll->size,cur->item);
+            pre->next = cur->next;
+            ll->size--;
+            cur = cur->next; i++; counter++;
+        } 
+        else {
+            pre = cur;
+            cur = cur->next; i++;
+        }
+    }
 }

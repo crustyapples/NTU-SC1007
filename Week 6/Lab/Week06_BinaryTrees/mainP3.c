@@ -84,5 +84,14 @@ void deleteTree(BTNode **root){
 
 
 int maxDepth(BTNode *node){
-//Write your code here
+    //Write your code here
+    int left,right,depth; left = right = -1;
+
+    if (node==NULL) return -1;
+    if (node->left) left = maxDepth(node->left);
+    if (node->right) right = maxDepth(node->right);
+
+    if (left > right) return left + 1;
+    else if (right > left) return right + 1;
+    else return left + 1;
 }

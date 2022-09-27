@@ -103,10 +103,16 @@ void deleteQueue(Queue *qPtr)
     while(dequeue(qPtr));
 }
 
+Queue q;
+
 void recursiveReverse(Queue *qPtr){
-//Write your code here
-
-
-
-
+    if (qPtr->size == 0) return;
+    int item = getFront(*qPtr);
+    dequeue(qPtr);
+    recursiveReverse(qPtr);
+    enqueue(qPtr, item);
+    return;
 }
+
+// 0 1 1 2 3 5 8 13 21
+// 21 13 8 5 3 2 1 1 0

@@ -94,5 +94,34 @@ void deleteList(ListNode **ptrHead){
 }
 
 int moveMaxToFront(ListNode **ptrHead){
+    int max = 0; 
+    ListNode *head = *ptrHead;
+    ListNode *cur, *pre = NULL;
+    ListNode *maxNode = NULL;
 
+    
+    int i = 0;
+    cur = head;
+    while (cur!=NULL) {
+        
+        // finding the max item
+        if (cur->item > max) {
+            max = cur->item;
+        }
+
+        cur = cur->next;
+        i++;
+    }
+
+    pre = findNode(*ptrHead, i-2);
+    maxNode = pre->next;
+    pre->next = maxNode->next;
+    maxNode->next = head;
+    *ptrHead = maxNode;
+
+    return i-1;
 }
+
+// 0 -5 1 2 7 
+// max = 7 index = 4
+// 7 0 -5 1 2 

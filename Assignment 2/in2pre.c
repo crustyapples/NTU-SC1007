@@ -159,6 +159,8 @@ void reverseString(char *s)
         s[i] = s[len - i - 1];  
         s[len - i - 1] = t;  
     }  
+
+    s[len] = '\0';
 }
 
 void swapBrackets(char *s) {
@@ -182,6 +184,8 @@ int checkPrecedence(char operator)
     else if (operator == '+' || operator == '-')
     {
         return 1;
+    } else {
+        return 0;
     }
 }
 
@@ -193,7 +197,6 @@ void in2PreLL(char* infix, LinkedList *inExpLL)
 
     // reverse the infix string and then convert it into a postfix expression
 
-    char postfix[SIZE];
     Stack s;
     s.head = NULL;
     s.size = 0;
@@ -201,93 +204,67 @@ void in2PreLL(char* infix, LinkedList *inExpLL)
     int operand = 0;
     int i = 0;
     int n = 0;
-    int k = 0;
-    int length = strLen(infix);
+    char c;
 
-    for (int i = 0; i < length; i++){
-        int j=0;
+    while (infix[i] != '\0')
+    {
+        int k = 0;
         char holdingStr[SIZE] = " ";
-
-        if (infix[i] != '+' && infix[i] != '-' && infix[i] != '*' && infix[i] != '/' && infix[i] != '(' && infix[i] != ')'){ 
-            postfix[k] = infix[i];
-            k++;
-            n = i;
-            while (infix[i] != '+' && infix[i] != '-' && infix[i] != '*' && infix[i] != '/' && infix[i] != '(' && infix[i] != ')') {
-                holdingStr[j] = infix[i];
-                j++;
-                i++;
+        c = infix[i++];
+        switch (c)
+        {
+        case '*': 
+        case '/':
+        case '+':
+        case '-':                                                                                  
+            while (isEmptyStack(s) == 0 && peek(s) != '(' && checkPrecedence(peek(s)) > checkPrecedence(c)) 
+            {                                                                                       
+                insertNode(inExpLL, peek(s), OPT);                                                        
+                pop(&s);                                                                           
             }
-            i = n+1;
-            // reverse the digits before passing them into the node
-            
-            reverseString(holdingStr);
-            operand = atof(holdingStr);
-            insertNode(inExpLL, operand, OPERAND);
-        }
-
-        else if(infix[i] == ')'){  
-            while (peek(s) != '('){
-                postfix[k] = peek(s);
-                insertNode(inExpLL, peek(s), OPT);
-                k++;
-                pop(&s);
-            }
-            pop(&s); 
-        }
-
-        else if(infix[i] == '('){ 
-            push(&s, infix[i]);
-        }
-
-        else{
-            while(s.size != 0 && peek(s) != '(' && checkPrecedence(peek(s) >= checkPrecedence(infix[i]))){
-                    postfix[k] = peek(s);
+            push(&s, c); 
+            break;       
+        case '(':        
+            push(&s, c); 
+            break;
+        case ')':                        
+            while (isEmptyStack(s) == 0) 
+            {                            
+                if (peek(s) != '(')
+                {
                     insertNode(inExpLL, peek(s), OPT);
-                    k++;
                     pop(&s);
+                }
+                else 
+                {
+                    pop(&s);
+                    break;
+                }
             }
-            push(&s, infix[i]);
-        }
-    }
+            break;
+        default:
+            if (c != '+' && c != '-' && c != '*' && c != '/' && c != '(' && c != ')') {
 
-    while(s.size!=0){
-        postfix[k] = peek(s);
+                while (c != '+' && c != '-' && c != '*' && c != '/' && c != '(' && c != ')' && c != '\0') {
+                    holdingStr[k] = c;
+                    c = infix[i++];
+                    k++;
+                }
+                i--;
+
+                reverseString(holdingStr);
+                operand = atof(holdingStr);
+                insertNode(inExpLL, operand, OPERAND);
+                printf("%d \n",operand);
+            } 
+
+        }
+    }                            
+    while (isEmptyStack(s) == 0) 
+    {
         insertNode(inExpLL, peek(s), OPT);
-        k++;
         pop(&s);
     }
-
-    postfix[k] = '\0';
-
-    // insert the postfix of the reversed string at the start of the linkedlist to reverse  it once
-
-    // int operand = 0;
-    // int len = strLen(postfix);
-    // i = 0;
-
-    // while (i<len) {
-    //     int j = 0;
-    //     char holdingStr[SIZE] = " ";
-
-    //     if (postfix[i] == '+' | postfix[i] == '-' | postfix[i] == '/' | postfix[i] == '*' | postfix[i] == ')' | postfix[i] == '(') {
-    //         insertNode(inExpLL, postfix[i], OPT);
-    //         i++;
-    //     } 
-        
-    //     else {
-    //         while (postfix[i] != '+' && postfix[i] != '-' && postfix[i] != '*' && postfix[i] != '/' && postfix[i] != '(' && postfix[i] != ')') {
-    //             holdingStr[j] = postfix[i];
-    //             j++;
-    //             i++;
-    //         }
-
-    //         // reverse the digits before passing them into the node
-    //         reverseString(holdingStr);
-    //         operand = atof(holdingStr);
-    //         insertNode(inExpLL, operand, OPERAND);
-    //     }
-
-    // }
 
 }
 
