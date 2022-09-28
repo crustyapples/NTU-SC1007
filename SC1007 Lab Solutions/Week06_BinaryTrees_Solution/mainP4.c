@@ -11,12 +11,15 @@ BTNode* insertBTNode(BTNode* cur, int item);
 void printBTNode(BTNode *root, int space,int left);
 void deleteTree(BTNode **root);
 
-int hasGreatGrandchild(BTNode *node);
+BTNode *searchNode(BTNode *node, int key);
 
 int main()
 {
     BTNode* root=NULL;
     int item;
+
+    BTNode* snode;
+    int key;
 
     printf("Enter a list of numbers for a Binary Tree, terminated by any non-digit character: \n");
     while(scanf("%d",&item))
@@ -26,9 +29,17 @@ int main()
     printf("The Binary Tree:\n");
     printBTNode(root,0,0);
 
-    printf("The node(s) with great grandchild:\n");
-    hasGreatGrandchild(root);
-    printf("\n");
+
+    printf("Please enter a value to search:");
+    scanf("%d",&key);
+    snode = searchNode(root,key);
+
+    if(snode != NULL){
+        printf("The node is found.\n");
+    }
+    else{
+        printf("The node is not found.\n");
+    }
 
     deleteTree(&root);
     root=NULL;
@@ -85,16 +96,17 @@ void deleteTree(BTNode **root){
 }
 
 
-int hasGreatGrandchild(BTNode *node){
-    //Write your code here
-    int depth=0;
+BTNode *searchNode(BTNode *node, int key)
+{
+    BTNode *temp;
+    if(node == NULL)
+        return NULL;
+    if(node->item == key)
+        return node;
 
-    if (node==NULL) return depth;
+    temp = searchNode(node->left,key);
+    if(temp == NULL)
+        temp = searchNode(node->right,key);
 
-    if (node->left) depth = hasGreatGrandchild(node->left);
-    if (node->right) depth = hasGreatGrandchild(node->right);
-    if (depth > 2) printf("%d ", node->item);
-    // printf("depth: %d, node: %d \n", depth, node->item);
-
-    return depth + 1;
+    return temp;
 }

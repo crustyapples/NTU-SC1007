@@ -108,23 +108,43 @@ void deleteTree(BTNode **root){
 	}
 }
 
+int maxItem(BTNode *node) {
+    int left, right;
+    left = right = node->item;
+    if (node==NULL) return 0;
+    if (node->left && node->item > left) left = maxItem(node->left);
+    if (node->right && node->item > right) right = maxItem(node->right);
+
+    if (left>right) return left;
+    else return right;
+}
+
+int minItem(BTNode *node) {
+    int left, right;
+    left = right = node->item;
+    if (node==NULL) return 0;
+    if (node->left && node->item > left) left = maxItem(node->left);
+    if (node->right && node->item > right) right = maxItem(node->right);
+
+    if (left<right) return left;
+    else return right;
+}
+
 int isBST(BTNode *root){
     //Write Your Code Here
-    if (root->left == NULL) {
-        if (root->right == NULL) {
-            return 0;
-        }
-    }
+    if (root == NULL) return 1;
 
-    if (root->left != NULL && root->left->item < root->item) {
-        isBST(root->left);
-    } else {
+    if (root->left != NULL && maxItem(root->left) > root->item) {
+        printf("max: %d \n", maxItem(root->left));
         return 0;
     }
     
-    if (root->right != NULL && root->right->item > root->item) {
-        isBST(root->right);     
-    } else {
+    if (root->right != NULL && minItem(root->right) < root->item) {
+        printf("min: %d \n", minItem(root->right));
+        return 0;
+    }
+
+    if (!isBST(root->left) || !isBST(root->right)) {
         return 0;
     }
 

@@ -139,47 +139,27 @@ void printBTNode(BTNode *root,int space,int left){
       }
 }
 
-// void levelOrder(BTNode *root)
-// {
-// //Write your code here
-//     Queue q;
-//     q.head = NULL;
-//     q.tail = NULL;
-//     q.size = 0;
+void levelOrder(BTNode *root)
+{
+	Queue q;
+	q.head = NULL;
+	q.tail = NULL;
+	q.size = 0;
 
-//     BTNode *node;
-//     node = root;
-//     if (node!=NULL) {
-//         enqueue(&q, node);
-//         while (!isEmptyQueue(q)) {
-//             node = getFront(q); dequeue(&q);
-//             printf("%d ",node->item);
-//             if (node->left != NULL) 
-//                 enqueue(&q, node->left);
-//             if (node->right != NULL) 
-//                 enqueue(&q, node->right);
-//         }
-//     }
-// }
+	BTNode *temp;
+	temp = root;
 
-void levelOrder(BTNode *root) {
-    Queue q;
-    q.head = NULL;
-    q.tail = NULL;
-    q.size = 0;
-
-    if (root) {
-        enqueue(&q, root);
-        while(!isEmptyQueue(q)) {
-            root = getFront(q); dequeue(&q);
-            printf("%d ", root->item);
-            if (root->left != NULL) enqueue(&q,root->left);
-            if (root->right != NULL) enqueue(&q,root->right);
-        }
+    if(temp != NULL)
+    {
+          enqueue(&q,temp);
+          while(!isEmptyQueue(q))
+          {
+              temp=getFront(q);dequeue(&q);
+              printf("%d ",temp->item);
+              if(temp->left!=NULL)
+                  enqueue(&q,temp->left);
+              if(temp->right!=NULL)
+                  enqueue(&q,temp->right);
+          }
     }
 }
-
-// 1. Enqueue the root of the tree into the queue
-// 2. Dequeue a node from the queue
-// 3. Enqueue the node's child nodes if they are available
-// 4. Repeat the step 2 until the queue is empty 

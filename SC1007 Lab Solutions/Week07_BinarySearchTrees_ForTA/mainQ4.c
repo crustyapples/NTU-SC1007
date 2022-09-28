@@ -14,7 +14,6 @@ BTNode* findBSTNode(BTNode *cur, int item);
 void deleteTree(BTNode **root);
 
 void rotateRNode(BTNode **node);
-void rotateLNode(BTNode **node);
 
 int main()
 {
@@ -41,9 +40,9 @@ int main()
 
     if(cur!=NULL)
         if(option)
-            rotateLNode(&(cur->right));
+            rotateRNode(&(cur->right));
         else
-             rotateLNode(&(cur->left));
+             rotateRNode(&(cur->left));
 
     printBTNode(rootBST,0,0);
 
@@ -120,27 +119,18 @@ void deleteTree(BTNode **root){
 	}
 }
 
-// void rotateRNode(BTNode **node){
-//     BTNode *cur = *node;
-//     BTNode *left = cur->left;
+void rotateRNode(BTNode **node){
+    if((*node) == NULL) return;
 
-//     cur->left = left->right;
-//     left->right = cur;
+    BTNode *x = (*node)->left;
+    BTNode *xRChild;
 
-//     *node = left;
-// }
+    if(x!=NULL)
+        xRChild= x->right;
+    else return;
 
+    (*node)->left = xRChild;
+    x->right = *node;
 
-void rotateRNode(BTNode **node) {
-    BTNode *temp = (*node)->left;
-    (*node)->left = temp->right;
-    temp->right = (*node);
-    *node = temp;
-}
-
-void rotateLNode(BTNode **node) {
-    BTNode *temp = (*node)->right;
-    (*node)->right = temp->left;
-    temp->left = (*node);
-    *node = temp;
+    (*node) = x;
 }

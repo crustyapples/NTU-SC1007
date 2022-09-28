@@ -8,47 +8,37 @@ typedef struct _btnode{
 } BTNode;
 
 BTNode* insertBSTNode(BTNode* cur, int item);
-
 void printBTNode(BTNode *root, int space,int left);
-BTNode* findBSTNode(BTNode *cur, int item);
 void deleteTree(BTNode **root);
-
-void rotateRNode(BTNode **node);
-void rotateLNode(BTNode **node);
+int removeBSTNode(BTNode **nodePtr, int item);
 
 int main()
 {
-    BTNode* rootBST=NULL;
-    BTNode* cur = NULL;
+    BTNode* root=NULL;
     int item;
-    int option;
 
     printf("Enter a list of numbers for a Binary Tree, terminated by any non-digit character: \n");
-    while(scanf("%d",&item)){
-        rootBST = insertBSTNode(rootBST, item);
-    }
+    while(scanf("%d",&item))
+        root = insertBSTNode(root, item);
     scanf("%*s");
 
-    printBTNode(rootBST,0,0);
+    printf("The Binary Search Tree:\n");
+    printBTNode(root,0,0);
 
-    printf("Enter an integer to be searched in the tree:\n");
+    printf("Enter an integer to be removed from the tree:\n");
     scanf("%d",&item);
 
-    cur = findBSTNode(rootBST,item);
+    if(removeBSTNode(&root,item))
+       printf("%d was removed\n",item);
 
-    printf("about its left child (0) or right child (1): ");
-    scanf("%d",&option);
+    else
+       printf("%d is not in the tree.\n",item);
 
-    if(cur!=NULL)
-        if(option)
-            rotateLNode(&(cur->right));
-        else
-             rotateLNode(&(cur->left));
+    printf("The Binary Search Tree:\n");
+    printBTNode(root,0,0);
 
-    printBTNode(rootBST,0,0);
-
-    deleteTree(&rootBST);
-    rootBST=NULL;
+    deleteTree(&root);
+    root=NULL;
     return 0;
 }
 
@@ -93,23 +83,6 @@ void printBTNode(BTNode *root,int space,int left){
       }
 }
 
-BTNode* findBSTNode(BTNode *cur, int item){
-    if (cur == NULL) {
-       printf("Not Found\n");
-       return cur;
-    }
-
-    if(item==cur->item){
-       printf("Found\n");
-       return cur;
-    }
-
-    if(item<cur->item)
-       return findBSTNode(cur->left,item);
-    else
-       return findBSTNode(cur->right,item);
-}
-
 void deleteTree(BTNode **root){
     if (*root != NULL)
 	{
@@ -119,28 +92,32 @@ void deleteTree(BTNode **root){
 		*root = NULL;
 	}
 }
+int removeBSTNode(BTNode **nodePtr, int item){
+    BTNode *temp;
 
-// void rotateRNode(BTNode **node){
-//     BTNode *cur = *node;
-//     BTNode *left = cur->left;
+    if(*nodePtr==NULL)
+        return 0;
 
-//     cur->left = left->right;
-//     left->right = cur;
+    if((*nodePtr)->item > item)
+        return removeBSTNode(&(*nodePtr)->left,item);
+    else if((*nodePtr)->item < item)
+        return removeBSTNode(&(*nodePtr)->right,item);
+    else
+    if((*nodePtr)->left!=NULL &&(*nodePtr)->right!=NULL){
+        //Find max item in the left subtree
+        for(temp=(*nodePtr)->left;temp->right!=NULL;temp=temp->right);
 
-//     *node = left;
-// }
+        (*nodePtr)->item = temp->item; //copy the successor
 
-
-void rotateRNode(BTNode **node) {
-    BTNode *temp = (*node)->left;
-    (*node)->left = temp->right;
-    temp->right = (*node);
-    *node = temp;
-}
-
-void rotateLNode(BTNode **node) {
-    BTNode *temp = (*node)->right;
-    (*node)->right = temp->left;
-    temp->left = (*node);
-    *node = temp;
+        return removeBSTNode(&(*nodePtr)->left,temp->item);
+    }
+    else{
+        temp=*nodePtr;
+        if((*nodePtr)->left !=NULL)
+            *nodePtr = (*nodePtr)->left;
+        else
+            *nodePtr = (*nodePtr)->right;
+        free(temp);
+        return 1;
+    }
 }

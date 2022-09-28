@@ -93,18 +93,18 @@ void deleteTree(BTNode **root){
 	}
 }
 
-BTNode* findSmallest(BTNode *node){
-    printf("right tree %d \n", node->item);
-    if (node->left == NULL) return node;
-    findSmallest(node->left);
+// BTNode* findSmallest(BTNode *node){
+//     printf("right tree %d \n", node->item);
+//     if (node->left == NULL) return node;
+//     findSmallest(node->left);
 
-}
+// }
 
-BTNode* findLargest(BTNode *node){
-    printf("left tree %d \n", node->item);
-    if (node->right == NULL) return node;
-    findLargest(node->right);
-}
+// BTNode* findLargest(BTNode *node){
+//     printf("left tree %d \n", node->item);
+//     if (node->right == NULL) return node;
+//     findLargest(node->right);
+// }
 
 int removeBSTNode(BTNode **nodePtr, int item){
     //Write Your Code Here
@@ -112,34 +112,37 @@ int removeBSTNode(BTNode **nodePtr, int item){
     // 1. node has no children
     // 2. node has one child node
     // 3. node has two child nodes
+
+    BTNode *node = *nodePtr;
     BTNode *temp;
 
-    if(*nodePtr == NULL) {
-        return 0;
+    if (node == NULL) return 0;
+
+    if (node->left && node->item > item) {
+        removeBSTNode(temp->left,item);
     }
-
-    if((*nodePtr)->item > item) {
-        return removeBSTNode(&(*nodePtr)->left, item);
-    } else if ((*nodePtr)->item < item) {
-        return removeBSTNode(&(*nodePtr)->right, item);
-    } else {
-        if ((*nodePtr)->left != NULL && (*nodePtr)->right != NULL) {
-            // find max item in the  left subtree
-
-            for (temp=(*nodePtr)->left; temp->right != NULL; temp=temp->right);
-
-            (*nodePtr)->item = temp->item;
-            return removeBSTNode(&(*nodePtr)->left, temp->item);
+    if (node->right && node->item < item) {
+        removeBSTNode(node->right,item);
+    }
+    else {
+        if (node->right != NULL && node->left != NULL) {
+            temp = node->left;
+            while (temp->right != NULL) {
+                temp = temp->right;
+            }
+            node->item = temp->item;
+            return removeBSTNode(node->left,temp->item);
         }
         else {
-            temp = *nodePtr;
-            if ((*nodePtr)->left != NULL) {
-                *nodePtr = (*nodePtr)->left;
+            temp = node;
+            if (node->left) {
+                node = node->left;
             } else {
-                *nodePtr = (*nodePtr)->right;
+                node = node->right;
             }
             free(temp);
             return 1;
         }
     }
+    
 }

@@ -86,15 +86,20 @@ void deleteTree(BTNode **root){
 
 
 int hasGreatGrandchild(BTNode *node){
-    //Write your code here
-    int depth=0;
+    int l, r;
 
-    if (node==NULL) return depth;
+	// Calculate the height of each node in the tree
+	// Print out (data stored in) node that has height > n
 
-    if (node->left) depth = hasGreatGrandchild(node->left);
-    if (node->right) depth = hasGreatGrandchild(node->right);
-    if (depth > 2) printf("%d ", node->item);
-    // printf("depth: %d, node: %d \n", depth, node->item);
+	if (node == NULL)
+		return 0;
 
-    return depth + 1;
+	l = hasGreatGrandchild(node->left);
+	r = hasGreatGrandchild(node->right);
+
+	if(r>2 || l>2) printf("%d ", node->item);
+
+	return l>r? (l + 1): (r+1);
+
 }
+

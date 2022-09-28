@@ -11,7 +11,7 @@ BTNode* insertBTNode(BTNode* cur, int item);
 void printBTNode(BTNode *root, int space,int left);
 void deleteTree(BTNode **root);
 
-int hasGreatGrandchild(BTNode *node);
+void printSmallerValues(BTNode *node, int m);
 
 int main()
 {
@@ -26,12 +26,15 @@ int main()
     printf("The Binary Tree:\n");
     printBTNode(root,0,0);
 
-    printf("The node(s) with great grandchild:\n");
-    hasGreatGrandchild(root);
+    printf("Enter an integer:\n");
+    scanf("%d",&item);
+    printf("Smaller number(s) in the tree:\n");
+    printSmallerValues(root, item);
     printf("\n");
 
     deleteTree(&root);
     root=NULL;
+
     return 0;
 }
 
@@ -49,7 +52,6 @@ BTNode* insertBTNode(BTNode* cur, int item){
 
     return cur;
 }
-
 void printBTNode(BTNode *root,int space,int left){
       if (root != NULL)
       {
@@ -84,17 +86,18 @@ void deleteTree(BTNode **root){
 	}
 }
 
+// void printSmallerValues(BTNode *node, int m){
+//     if (node==NULL) return;
+// 	if (node->item<m)
+//         printf("%d ", node->item);
 
-int hasGreatGrandchild(BTNode *node){
-    //Write your code here
-    int depth=0;
+// 	 printSmallerValues(node->left, m);
+// 	 printSmallerValues(node->right, m);
+// }
 
-    if (node==NULL) return depth;
-
-    if (node->left) depth = hasGreatGrandchild(node->left);
-    if (node->right) depth = hasGreatGrandchild(node->right);
-    if (depth > 2) printf("%d ", node->item);
-    // printf("depth: %d, node: %d \n", depth, node->item);
-
-    return depth + 1;
+void printSmallerValues(BTNode *node, int K) {
+    if (node == NULL) return;
+    if (node->item < K) printf("%d ", node->item);
+    if (node->left) printSmallerValues(node->left, K);
+    if (node->right) printSmallerValues(node->right, K);
 }

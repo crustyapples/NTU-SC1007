@@ -8,48 +8,53 @@ typedef struct _btnode{
 } BTNode;
 
 BTNode* insertBSTNode(BTNode* cur, int item);
+BTNode* insertBTNode(BTNode* cur, int item);
 
 void printBTNode(BTNode *root, int space,int left);
-BTNode* findBSTNode(BTNode *cur, int item);
 void deleteTree(BTNode **root);
 
-void rotateRNode(BTNode **node);
-void rotateLNode(BTNode **node);
+int isBST(BTNode *root);
+int isBSTX(BTNode *root,BTNode* l, BTNode* r);
 
 int main()
 {
     BTNode* rootBST=NULL;
-    BTNode* cur = NULL;
+    BTNode* rootBT=NULL;
     int item;
-    int option;
 
     printf("Enter a list of numbers for a Binary Tree, terminated by any non-digit character: \n");
     while(scanf("%d",&item)){
         rootBST = insertBSTNode(rootBST, item);
+        rootBT = insertBTNode(rootBT,item);
     }
     scanf("%*s");
 
+    printf("The binary tree is %s:\n",isBST(rootBST)?"a BST": "not a BST");
     printBTNode(rootBST,0,0);
-
-    printf("Enter an integer to be searched in the tree:\n");
-    scanf("%d",&item);
-
-    cur = findBSTNode(rootBST,item);
-
-    printf("about its left child (0) or right child (1): ");
-    scanf("%d",&option);
-
-    if(cur!=NULL)
-        if(option)
-            rotateLNode(&(cur->right));
-        else
-             rotateLNode(&(cur->left));
-
-    printBTNode(rootBST,0,0);
+    printf("The binary tree is %s:\n",isBST(rootBT)?"a BST": "not a BST");
+    printBTNode(rootBT,0,0);
 
     deleteTree(&rootBST);
     rootBST=NULL;
+    deleteTree(&rootBT);
+    rootBT=NULL;
+
     return 0;
+}
+
+BTNode* insertBTNode(BTNode* cur, int item){
+    if (cur == NULL){
+        BTNode* node = (BTNode*) malloc(sizeof(BTNode));
+        node->item = item;
+        node->left = node->right = NULL;
+        return node;
+	}
+    if (rand()%2)
+        cur->left  = insertBTNode (cur->left, item);
+    else
+        cur->right = insertBTNode (cur->right, item);
+
+    return cur;
 }
 
 BTNode* insertBSTNode(BTNode* cur, int item){
@@ -93,22 +98,6 @@ void printBTNode(BTNode *root,int space,int left){
       }
 }
 
-BTNode* findBSTNode(BTNode *cur, int item){
-    if (cur == NULL) {
-       printf("Not Found\n");
-       return cur;
-    }
-
-    if(item==cur->item){
-       printf("Found\n");
-       return cur;
-    }
-
-    if(item<cur->item)
-       return findBSTNode(cur->left,item);
-    else
-       return findBSTNode(cur->right,item);
-}
 
 void deleteTree(BTNode **root){
     if (*root != NULL)
@@ -120,27 +109,21 @@ void deleteTree(BTNode **root){
 	}
 }
 
-// void rotateRNode(BTNode **node){
-//     BTNode *cur = *node;
-//     BTNode *left = cur->left;
+int isBST(BTNode *root){
+    if(root==NULL)
+       return 1;
 
-//     cur->left = left->right;
-//     left->right = cur;
-
-//     *node = left;
-// }
-
-
-void rotateRNode(BTNode **node) {
-    BTNode *temp = (*node)->left;
-    (*node)->left = temp->right;
-    temp->right = (*node);
-    *node = temp;
+    return isBSTX(root,NULL,NULL);
 }
 
-void rotateLNode(BTNode **node) {
-    BTNode *temp = (*node)->right;
-    (*node)->right = temp->left;
-    temp->left = (*node);
-    *node = temp;
+int isBSTX(BTNode *root,BTNode* l, BTNode* r){
+    if(root==NULL) return 1;
+
+    if(l!=NULL && root->item <= l->item)
+        return 0;
+    if(r!=NULL && root->item >= r->item)
+        return 0;
+
+    return isBSTX(root->left,l,root) && isBSTX(root->right,root,r);
+
 }

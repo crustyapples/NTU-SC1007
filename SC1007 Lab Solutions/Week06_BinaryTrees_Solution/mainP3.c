@@ -11,7 +11,7 @@ BTNode* insertBTNode(BTNode* cur, int item);
 void printBTNode(BTNode *root, int space,int left);
 void deleteTree(BTNode **root);
 
-int hasGreatGrandchild(BTNode *node);
+int maxDepth(BTNode *node);
 
 int main()
 {
@@ -26,9 +26,7 @@ int main()
     printf("The Binary Tree:\n");
     printBTNode(root,0,0);
 
-    printf("The node(s) with great grandchild:\n");
-    hasGreatGrandchild(root);
-    printf("\n");
+    printf("The maximum depth of the binary tree is: %d\n",maxDepth(root));
 
     deleteTree(&root);
     root=NULL;
@@ -85,16 +83,18 @@ void deleteTree(BTNode **root){
 }
 
 
-int hasGreatGrandchild(BTNode *node){
-    //Write your code here
-    int depth=0;
+int maxDepth(BTNode *node){
+    if(node == NULL){
+        return -1;
+    }
+    else{
+        int ldepth = maxDepth(node->left);
+        int rdepth = maxDepth(node->right);
 
-    if (node==NULL) return depth;
+        if(ldepth > rdepth) return ldepth+1;
+        else{
+            return rdepth+1;
+        }
+    }
 
-    if (node->left) depth = hasGreatGrandchild(node->left);
-    if (node->right) depth = hasGreatGrandchild(node->right);
-    if (depth > 2) printf("%d ", node->item);
-    // printf("depth: %d, node: %d \n", depth, node->item);
-
-    return depth + 1;
 }

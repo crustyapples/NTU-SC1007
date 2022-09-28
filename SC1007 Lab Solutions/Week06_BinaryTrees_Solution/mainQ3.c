@@ -11,7 +11,7 @@ BTNode* insertBTNode(BTNode* cur, int item);
 void printBTNode(BTNode *root, int space,int left);
 void deleteTree(BTNode **root);
 
-int hasGreatGrandchild(BTNode *node);
+void mirrorTree(BTNode *node);
 
 int main()
 {
@@ -23,15 +23,16 @@ int main()
         root = insertBTNode(root, item);
     scanf("%*s");
 
-    printf("The Binary Tree:\n");
+    printf("Original Tree\n");
     printBTNode(root,0,0);
-
-    printf("The node(s) with great grandchild:\n");
-    hasGreatGrandchild(root);
-    printf("\n");
+    printf("---------------------------------------------------------------\n");
+    mirrorTree(root);
+    printBTNode(root,0,0);
+    printf("Mirrored Tree\n");
 
     deleteTree(&root);
     root=NULL;
+
     return 0;
 }
 
@@ -49,7 +50,6 @@ BTNode* insertBTNode(BTNode* cur, int item){
 
     return cur;
 }
-
 void printBTNode(BTNode *root,int space,int left){
       if (root != NULL)
       {
@@ -84,17 +84,35 @@ void deleteTree(BTNode **root){
 	}
 }
 
+void mirrorTree(BTNode *node){
+    BTNode *temp;
 
-int hasGreatGrandchild(BTNode *node){
-    //Write your code here
-    int depth=0;
+	if (node == NULL)
+	return;
 
-    if (node==NULL) return depth;
+	// Swap left and right BTNode pointers
+	// Using pre-order traversal
+/*
+	temp = node->left;
+	node->left = node->right;
+	node->right = temp;
+	mirrorTree(node->left);
+	mirrorTree(node->right);
+*/
+	// Using post-order traversal
+	/*
+	 mirrorTree(node->left);
+	 mirrorTree(node->right);
+	 temp = node->left;
+	 node->left = node->right;
+	 node->right = temp;
+	  */
 
-    if (node->left) depth = hasGreatGrandchild(node->left);
-    if (node->right) depth = hasGreatGrandchild(node->right);
-    if (depth > 2) printf("%d ", node->item);
-    // printf("depth: %d, node: %d \n", depth, node->item);
+	// What about using in-order traversal?
 
-    return depth + 1;
+	mirrorTree(node->left);
+	temp = node->left;
+	node->left = node->right;
+	node->right = temp;
+	mirrorTree(node->left);
 }
