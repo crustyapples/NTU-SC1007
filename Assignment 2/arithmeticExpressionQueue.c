@@ -106,8 +106,6 @@ void printExpQ(Queue *qPtr){
 
 }
 
-
-
 void expressionQ(char *infix, Queue* qPtr)
 {
     char holdingStr[SIZE];
