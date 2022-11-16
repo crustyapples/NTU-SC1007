@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-enum GraphType {ADJ_MATRIX, ADJ_LIST}; // Types of Graph Representation
+enum GraphType {ADJ_MATRIX, ADJ_LIST}; // Types of Graph Representation with ADJ_MATRIX and ADJ_LIST as types
 
 typedef struct _listnode
 {
     int vertex;
 	struct _listnode *next;
-} ListNode;
+} ListNode; //Linkedlist Node with data vertex and pointer to next node
 
-union GraphForm{
+union GraphForm{  //union is user defined data type where all memebers share the same memory location
     int **matrix;
     ListNode **list;
 };
@@ -29,7 +29,7 @@ void printDegreeV(int *,int );
 
 int main()
 {
-    Graph g;
+    Graph g; //declare a new graph
     int i,j;
 
     int* degreeV;
@@ -44,8 +44,8 @@ int main()
 
     for(i=0;i<g.V;i++)
         for(j=0;j<g.V;j++)
-            g.adj.matrix[i][j] = 0;
-    g.type = ADJ_MATRIX;
+            g.adj.matrix[i][j] = 0; //initialise matrix to be a 0 matrix
+    g.type = ADJ_MATRIX; //it is an adjacency matrix
 
     degreeV = (int *) malloc(g.V*sizeof(int));
     for(i=0;i<g.V;i++)
@@ -59,7 +59,7 @@ int main()
         {
             g.adj.matrix[V1-1][V2-1] = 1;
             g.adj.matrix[V2-1][V1-1] = 1;
-            g.E++;
+            g.E++; //add edges
         }
         else
             break;
@@ -97,47 +97,53 @@ void printGraphMatrix(Graph g)
 
 void adjM2adjL(Graph *g)
 {
-    // g->type = ADJ_LIST; 
-    // ListNode *cur = NULL;
 
-    int matrix[g->V][g->V];
-    for (int i=0; i< g->V ; i++) {
-        for (int j=0; j < g->V; j++) {
-            matrix[i][j] = (*g).adj.matrix[i][j];
-        }
+    if(g->type == ADJ_LIST){
+        return;
     }
 
-    // int value = 0;
-    // for (int i = 0; i < g->V; i++) {
-    //     cur = (g->adj).list[i];
-    //     for (int j = 0; j < g->V; j++) {
-    //         value = matrix[i][j];
-    //         if (value == 1) {
-    //             ListNode *newNode = malloc(sizeof(ListNode));
-    //             newNode->vertex = j+1;
-    //             cur->next = newNode;
-    //             cur = cur->next;
-    //         }
-    //     }
-    //     (g->adj).list[i] = (g->adj).list[i]->next;
-    // }
+    if(g->V <= 0){
+        return;
+    } 
 
-    ListNode *cur=NULL;
-    for (int i=0; i<g->V; i++) {
-        cur = g->adj.list[i];
-        for (int j=0; j<g->V; j++) {
-            if (matrix[i][j] == 1) {
-                ListNode *newNode = malloc(sizeof(ListNode));
-                newNode->vertex = j+1;
-                cur->next = newNode;
-                cur = cur->next;  
+    //define an adjaceny list to be an array of linkedlist, use double pointer
+
+    ListNode ** list = (ListNode **)malloc(g->V *sizeof(ListNode *)); 
+    
+    //initialise each linkeldlist to be null
+    
+    for(int i = 0; i < g->V; i++){
+        list[i] = NULL;
+    }
+    
+    ListNode *temp;
+    
+    for(int r = 0; r < g->V; r++){
+        for(int c = 0; c < g->V; c++){
+            if(g->adj.matrix[r][c] == 1){ 
+
+                if(list[r] == NULL){
+                    list[r] = (ListNode *)malloc(sizeof(ListNode));
+                    list[r] ->vertex = c + 1;
+                    list[r] -> next = NULL;
+                    temp = list[r];
+                }
+
+                else{
+                    temp -> next = (ListNode *)malloc(sizeof(ListNode));
+                    temp -> next -> vertex = c + 1;
+                    temp -> next ->next = NULL;
+                    temp = temp -> next;
+                }
             }
         }
-        g->adj.list[i] = g->adj.list[i]->next;
     }
 
     g->type = ADJ_LIST;
 
+    //free adj matrix
+
+    g->adj.list = list;
 }
 
 
@@ -162,18 +168,40 @@ void printGraphList(Graph g){
 
 void calDegreeV(Graph g, int *degreeV)
 {
-    // Question 3
-    // Write your code here
+    
+    for(int i = 0; i < g.V; i++){
+        degreeV[i] = 0;
+        ListNode *temp = g.adj.list[i];
 
-    ListNode *cur = NULL;
-    for (int i=0; i< g.V; i++) {
-        cur = g.adj.list[i];
-        while (cur != NULL) {
-            cur = cur->next;
+        while(temp != NULL){
             degreeV[i]++;
+            temp = temp -> next;
         }
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // Question 3
+    // Write your code here
+    // int i,j;
+    // ListNode *temp = NULL;
 
+	// for(i=0;i<g.V;i++){ //add size of their linkedlist in adjaceny list for each of the Vertices
+	// 	degreeV[i]=0;
+	// 	ListNode *temp = g.adj.list[i];
+	// 	while(temp != NULL){
+	// 		degreeV[i]++;
+	// 		temp = temp->next; //traverse through the linkedlist and keep adding 1 every time a next temp exists
+	// 	}
+	// }
 }
 
 void printDegreeV(int *degreeV,int V)
